@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django ChatBot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        /* Custom scrollbar */
+        .message-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .message-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .message-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .message-container::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Message animations */
+        .message {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            animation-delay: 0.1s;
+        }
+
+        .ai-message {
+            animation-delay: 0.3s;
+        }
+
+        /* Hover effects */
+        .conversation-item {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .conversation-item:hover {
+            transform: translateX(5px);
+        }
+
+        .delete-conv {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .conversation-item:hover .delete-conv {
+            opacity: 1;
+        }
+
+        :root {
+            --sidebar-width: 280px;
+            --primary-color: #4e73df;
+            --light-bg: #f8f9fc;
+            --dark-bg: #eaecf4;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            display: flex;
+            height: calc(100vh - 56px);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            border-right: 1px solid #e3e6f0;
+            overflow-y: auto;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: var(--light-bg);
+        }
+
+        .user-message {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 18px 18px 0 18px;
+            margin-left: auto;
+            max-width: 80%;
+        }
+
+        .ai-message {
+            background-color: white;
+            border: 1px solid #e3e6f0;
+            border-radius: 18px 18px 18px 0;
+            margin-right: auto;
+            max-width: 80%;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+        }
+
+        .conversation-item {
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .conversation-item.active,
+        .conversation-item:hover {
+            background-color: var(--light-bg);
+            border-left-color: var(--primary-color);
+        }
+
+        .message-input {
+            border-radius: 24px;
+            padding: 12px 20px;
+            border: 1px solid #e3e6f0;
+        }
+
+        .btn-send {
+            border-radius: 24px;
+            padding: 10px 24px;
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            position: relative;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            display: inline-block;
+            position: absolute;
+            bottom: 10px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .dot1 {
+            left: 8px;
+            animation-delay: 0s;
+        }
+
+        .dot2 {
+            left: 24px;
+            animation-delay: 0.2s;
+        }
+
+        .dot3 {
+            left: 40px;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-robot me-2"></i>Django ChatBot
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3 d-none d-md-block">Welcome, {{ request.user.email }}</span>
+                <a href="{% url 'admin:logout' %}" class="btn btn-outline-light">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="chat-container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
